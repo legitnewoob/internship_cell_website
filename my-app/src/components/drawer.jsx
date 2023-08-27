@@ -105,7 +105,7 @@ export default function PersistentDrawerLeft() {
   };
 
   return (
-    <Box>
+    <Box marginLeft={'16.4rem'}>
       <CssBaseline />
       <AppBar position="fixed" open={open}>
         <Toolbar sx={{ display: "flex" }}>

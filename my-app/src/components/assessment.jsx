@@ -27,10 +27,6 @@ const details = {
   dept: "Computer Engineering",
 };
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
-
 const rows = [
   { serialNo: 1, Name: "Weeks of internship done", scoreGiven: 0 },
   { serialNo: 2, Name: "Online Courses Completed till Date", scoreGiven: 0 },
@@ -58,11 +54,12 @@ for (let i = 0; i <= 10; i++) {
 }
 
 export default function Assessment() {
+ 
   const [data, setData] = useState(rows);
 
-  const handleScoreChange = (event, row) => {
+  const handleScoreChange = (event, index) => {
     const updatedData = [...data];
-    row.scoreGiven = event.target.value;
+    data[index].scoreGiven = event.target.value;
     setData(updatedData);
     console.log(data);
   };
@@ -191,7 +188,7 @@ export default function Assessment() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row) => (
+                {rows.map((row, index) => (
                   <TableRow
                     key={row.serialNo}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -213,7 +210,7 @@ export default function Assessment() {
                           id="demo-simple-select"
                           label="Score"
                           value={row.scoreGiven}
-                          onChange={(event) => handleScoreChange(event, row)}
+                          onChange={(event) => handleScoreChange(event, index)}
                         >
                           console.log(value);
                           {menuItems}

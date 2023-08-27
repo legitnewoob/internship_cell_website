@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import dayjs from "dayjs";
-import { Box, Paper, TextField, Typography } from "@mui/material";
+import { Box, Button, Paper, TextField, Typography } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -11,69 +11,201 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+// import ExcelDownloadButton from "./downloadExcel";
+import { CSVLink, CSVDownload } from "react-csv";
 
-const rows = [
-  {
-    id: 1,
-    category: "Category A",
-    roll_no: "160101",
-    name: "John Doe",
-    organization: "Company X",
-    date: "2023-08-23",
-    time: "09:00 AM",
-    venue: "Venue 1",
-  },
-  {
-    id: 2,
-    category: "Category B",
-    roll_no: "160102",
-    name: "Jane Smith",
-    organization: "Company Y",
-    date: "2023-08-24",
-    time: "10:30 AM",
-    venue: "Venue 2",
-  },
-  {
-    id: 3,
-    category: "Category A",
-    roll_no: "160103",
-    name: "Bob Johnson",
-    organization: "Company Z",
-    date: "2023-08-25",
-    time: "02:15 PM",
-    venue: "Venue 3",
-  },
-  {
-    id: 4,
-    category: "Category C",
-    roll_no: "160104",
-    name: "Alice Brown",
-    organization: "Company W",
-    date: "2023-08-26",
-    time: "11:45 AM",
-    venue: "Venue 4",
-  },
-  {
-    id: 5,
-    category: "Category B",
-    roll_no: "160105",
-    name: "Eve Green",
-    organization: "Company V",
-    date: "2023-08-27",
-    time: "03:30 PM",
-    venue: "Venue 5",
-  },
-];
+// const rows = [
+//   {
+//     id: 1,
+//     category: "Category A",
+//     roll_no: "12345",
+//     name: "John Doe",
+//     organization: "Org A",
+//     date: "",
+//     time: "",
+//     venue: "Venue 1",
+//   },
+//   {
+//     id: 2,
+//     category: "Category B",
+//     roll_no: "54321",
+//     name: "Jane Smith",
+//     organization: "Org B",
+//     date: "",
+//     time: "",
+//     venue: "Venue 2",
+//   },
+//   {
+//     id: 3,
+//     category: "Category C",
+//     roll_no: "98765",
+//     name: "Alice Johnson",
+//     organization: "Org C",
+//     date: "",
+//     time: "",
+//     venue: "Venue 3",
+//   },
+//   {
+//     id: 4,
+//     category: "Category D",
+//     roll_no: "24680",
+//     name: "Bob Wilson",
+//     organization: "Org D",
+//     date: "",
+//     time: "",
+//     venue: "Venue 4",
+//   },
+//   {
+//     id: 5,
+//     category: "Category E",
+//     roll_no: "13579",
+//     name: "Eve Brown",
+//     organization: "Org E",
+//     date: "",
+//     time: "",
+//     venue: "Venue 5",
+//   },
+// ];
+
+
+
+// const csvLink = {
+//   filename: "schedule.csv",
+//   headers: headers,
+//   data: rows,
+// };
 
 export default function InterviewSchedule() {
-  const [value, setValue] = React.useState(dayjs("2022-04-17"));
+
+  const [rows , setRows] = useState([
+    {
+      id: 1,
+      category: "Category A",
+      roll_no: "12345",
+      name: "John Doe",
+      organization: "Org A",
+      date: "",
+      time: "",
+      venue: "Venue 1",
+    },
+    {
+      id: 2,
+      category: "Category B",
+      roll_no: "54321",
+      name: "Jane Smith",
+      organization: "Org B",
+      date: "",
+      time: "",
+      venue: "Venue 2",
+    },
+    {
+      id: 3,
+      category: "Category C",
+      roll_no: "98765",
+      name: "Alice Johnson",
+      organization: "Org C",
+      date: "",
+      time: "",
+      venue: "Venue 3",
+    },
+    {
+      id: 4,
+      category: "Category D",
+      roll_no: "24680",
+      name: "Bob Wilson",
+      organization: "Org D",
+      date: "",
+      time: "",
+      venue: "Venue 4",
+    },
+    {
+      id: 5,
+      category: "Category E",
+      roll_no: "13579",
+      name: "Eve Brown",
+      organization: "Org E",
+      date: "",
+      time: "",
+      venue: "Venue 5",
+    },
+  ]);
+
+
+
+  const headers = [
+    { label: "Sr No.", key: "id" },
+    { label: "Category", key: "category" },
+    { label: "Roll Number", key: "roll_no" },
+    { label: "Student Name", key: "name" },
+    { label: "Organization Name", key: "organization" },
+    { label: "Date", key: "date" },
+    { label: "Time", key: "time" },
+    { label: "Venue", key: "venue" },
+  ];
+
+  const csvLink = {
+    filename: "schedule.csv",
+    headers: headers,
+    data: rows,
+  };
+
+  const n = rows.length;
+  const currentDate = new Date();
+
+  const [venues , setVenues] = useState(new Array(n).fill(""));
+  
+  const handleVenueChange = (value, index) => {
+    const newVenues = [...venues];
+    newVenues[index] = value;
+    setVenues(newVenues); 
+  };
+  const year = currentDate.getUTCFullYear();
+  const month = String(currentDate.getUTCMonth() + 1).padStart(2, "0");
+  const day = String(currentDate.getUTCDate()).padStart(2, "0");
+
+  const formattedDate = `${year}-${month}-${day}`;
+
+  let curr_Date = new Date();
+  const [dateValues, setDateValues] = useState(
+    new Array(n).fill(dayjs(formattedDate))
+  );
+
+  const [timeValues, setTimeValues] = useState(
+    new Array(n).fill(dayjs(new Date()))
+  );
+
+
+  const handleDateChange = (index, newValue) => {
+    console.log(newValue);
+    console.log(dateValues[index]);
+    dateValues[index] = newValue;
+
+    console.log(dateValues);
+  };
+
+  const handleTimeChange = (index, newValue) => {
+    console.log(timeValues);
+    timeValues[index] = newValue;
+    console.log(timeValues);
+  };
+
+  const handleSubmit = () => {
+    const updatedRows = rows.map((row, index) => ({
+      ...row,
+      date: dateValues[index],
+      time: timeValues[index],
+      venue : venues[index],
+    }));
+    setRows(updatedRows);
+    console.log(rows);
+  };
 
   return (
     <Box>
       <Typography
         display={"flex"}
         alignItems={"center"}
-        justifyContent={"center"} 
+        justifyContent={"center"}
         variant="h3"
       >
         Interview Scheduler
@@ -96,7 +228,7 @@ export default function InterviewSchedule() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row) => (
+                {rows.map((row, index) => (
                   <TableRow
                     key={row.name}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -112,8 +244,10 @@ export default function InterviewSchedule() {
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
                           label="Controlled picker"
-                          value={value}
-                          onChange={(newValue) => setValue(newValue)}
+                          value={dateValues[index]}
+                          onChange={(newValue) =>
+                            handleDateChange(index, newValue)
+                          }
                         />
                       </LocalizationProvider>
                     </TableCell>
@@ -121,8 +255,10 @@ export default function InterviewSchedule() {
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <TimePicker
                           label="Controlled picker"
-                          value={value}
-                          onChange={(newValue) => setValue(newValue)}
+                          value={timeValues[index]}
+                          onChange={(newValue) =>
+                            handleTimeChange(index, newValue)
+                          }
                         />
                       </LocalizationProvider>
                     </TableCell>
@@ -136,6 +272,7 @@ export default function InterviewSchedule() {
                         name="venue"
                         autoComplete="venue"
                         autoFocus
+                        onChange={(event) => handleVenueChange(event.target.value, index)}
                       />
                     </TableCell>
                   </TableRow>
@@ -143,6 +280,24 @@ export default function InterviewSchedule() {
               </TableBody>
             </Table>
           </TableContainer>
+
+          <Box
+            mt={2}
+            display={"flex"}
+            alignItems={"center"}
+            justifyContent={"center"}
+          >
+            <Button
+              variant="contained"
+              onClick={handleSubmit}
+              sx={{ marginRight: "5px" }}
+            >
+              Submit
+            </Button>
+            <Button>
+              <CSVLink {...csvLink}>Export</CSVLink>
+            </Button>
+          </Box>
         </Paper>
       </Box>
     </Box>

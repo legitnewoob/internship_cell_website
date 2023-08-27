@@ -50,7 +50,8 @@ const columns = [
     width: 250,
     flex: 1,
     renderCell: (params) => (
-      <Button variant="contained" href={"/assess?id=" + params.row.roll_no}>
+      <Button variant="contained" href = "/assessment" target="_blank">
+        {/* href={"/assess?id=" + params.row.roll_no} */}
         Evaluate / Edit
       </Button>
     ),
